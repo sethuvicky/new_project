@@ -1,13 +1,14 @@
-const { DataTypes } = require("sequelize");
-const db = require("../dbconfig");
+module.exports = (sequelize, DataTypes) => {
+  const Posts = sequelize.define("Todos", {
+    title: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    
+   
+  });
+
+  return Posts;
+};
 
 
-const Todo = db.sequelise.define("Todos", {
- 
-  title: DataTypes.STRING,
-
-});
-
-
-
-module.exports = Todo

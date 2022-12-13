@@ -7,7 +7,7 @@ const cors = require("cors");
 
 app.use(cors());
 
-const db = require('./dbconfig');
+const db = require("./models");
 const { graphqlHTTP } = require('express-graphql');
 const {GraphQLObjectType, GraphQLSchema} = require('graphql');
 // db.init()
@@ -38,8 +38,10 @@ app.use("/graphql", graphqlHTTP({
         mutation: Mutation
     })
 }))
-
-app.listen(3004, () => {
-    console.log("Server is running on port 3004")
+db.sequelize.sync().then(()=>{
+    app.listen(3004, () => {
+        console.log("Server is running on port 3004")
+    })
 })
+
 
