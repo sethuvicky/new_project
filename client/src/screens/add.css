@@ -1,0 +1,8 @@
+.parent{
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    align-items: center;
+    margin-top: 10%;
+    height: 100%;
+}
