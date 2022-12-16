@@ -12,6 +12,8 @@ import { DELETE_USER_MUTATION ,UPDATE_USER_MUTATION} from "../Graphql/Mutations"
 import { useMutation } from "@apollo/client";
 import {getTodo,EditTodo,DeleteTodo} from "../actions/allProductsAction"
 import { useSelector, useDispatch } from "react-redux";
+import Profile from './profile';
+import Card from 'react-bootstrap/Card';
 import ClipLoader from "react-spinners/ClipLoader";
 
 const Edit = ({datas}) => {
@@ -28,7 +30,8 @@ const Edit = ({datas}) => {
   // const client = ...
   const  {Todo}  = useSelector((state) => state.Todo);
   const  state  = useSelector((state) => state.Todo);
-
+  let [accessToken,setToken] = useState()
+  let [id,setID] = useState()
   useEffect(()=>{
     Todo && Todo.getAllTodos &&setdats(Todo.getAllTodos)
   
@@ -52,7 +55,12 @@ const Edit = ({datas}) => {
   function openModal() {
     setIsOpen(true);
   }
-
+  useEffect(()=>{
+    setToken(localStorage.getItem("accessToken"))
+    setID(localStorage.getItem("userid"))
+  
+  
+  },[])
   function afterOpenModal() {
     // references are now sync'd and can be accessed.
     subtitle.style.color = '#f00';
@@ -244,55 +252,39 @@ ref={(_subtitle) => (subtitle = _subtitle)}>Edit</h2>
         </Modal>
       </div>
 
-{loading?
-<div style={{display:"flex",justifyContent:"center"}}>
-<div className="sweet-loading" style={{marginTop:"400px",marginRight:"100px"}}>
 
-      <ClipLoader
-        color={color}
-        loading={loading}
-        cssOverride={override}
-        size={150}
-        aria-label="Loading Spinner"
-        data-testid="loader"
-      />
-    </div>
-    </div>:
-          <><h1 style={{ margin: "30px" }}>Todo list</h1><Table striped bordered hover>
-            <thead>
-              <tr>
-                <th>#</th>
-                <th>Todo List</th>
-                <th>Edit</th>
-                <th>Delete</th>
-              </tr>
-            </thead>
-            <tbody>
 
-              {dats && dats.length ? dats.map((items) => (
+{loading ?   <div className="sweet-loading" style={{marginTop:"400px",marginRight:"100px"}}>
 
-                items !== '' &&
-
-                <tr>
-                  <td>{items.id}</td>
-                  <td>{items.title}
-                  </td>
-                  <td>          <Button variant="primary" onClick={() => [openModal(), setediting(items.id)]}>Edit</Button>
-                  </td>
-                  <td><Button variant="danger" onClick={() => deleteHandler(items.id)}>Delete</Button>{' '}
-                  </td>
-                </tr>
+<ClipLoader
+  color={color}
+  loading={loading}
+  cssOverride={override}
+  size={150}
+  aria-label="Loading Spinner"
+  data-testid="loader"
+/>
+</div> : dats && dats.map((items)=>{
 
 
 
+return  <Card style={{margin:"80px"}}>
+    <Card.Header style={{background:"rgb(13,110,253)",color:"white"}}><Profile id={items.USERId}  /></Card.Header>
+    <Card.Body>
+      <Card.Title>                  
+</Card.Title>
+      <Card.Text>
+        {items.title}
+       </Card.Text>
+      {items.USERId == id &&          <Button style={{margin:"10px"}} variant="primary" onClick={() => [openModal(), setediting(items.id)]}>Edit</Button>
+                }   
+                      {items.USERId == id && <Button variant="danger" onClick={() => deleteHandler(items.id)}>Delete</Button>
+                }   </Card.Body>
+  </Card>
+})}
+        
 
 
-              )) : <h1 style={{ textAlign: "center", marginLeft: "60%", marginTop: "30%" }}>No entries</h1>}
-              {/* <input type="checkbox" value={items} onClick={(e)=>{settick(tick => [...tick,e.target.value]);}} /> */}
-
-            </tbody>
-          </Table></>}
-     
 
       {/* <div>
       <h1>Checkbox</h1>

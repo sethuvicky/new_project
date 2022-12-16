@@ -2,11 +2,14 @@ import { gql } from "@apollo/client";
 
 export const CREATE_USER_MUTATION = gql`
   mutation createTodo(
-    $title: String!
+    $title: String!,
+    $USERId:Int !
     
   ) {
     createTodo(
-        title: $title
+        title: $title,
+        USERId:  $USERId
+
      
     ) {
       id

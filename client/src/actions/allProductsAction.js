@@ -23,10 +23,13 @@ export const getTodo= () => async (dispatch)=>{
             getAllTodos{
               title
               id
+              USERId
+
             }
           }
           `,
         })
+        console.log(data)
      
         dispatch({
             type:ALL_TODO_SUCCESS,
@@ -63,6 +66,7 @@ export const getTodo= () => async (dispatch)=>{
             }
             `,
           })
+          console.log(data)
      
         dispatch({
             type:TODO_EDIT_SUCCESS,

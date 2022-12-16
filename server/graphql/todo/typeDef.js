@@ -7,6 +7,8 @@ const TodoType = new GraphQLObjectType({
         title: { type: GraphQLString },
         createdAt: { type: GraphQLString },
         updatedAt: { type: GraphQLString },
+        USERId: { type: GraphQLInt },
+
     })
 })
 

@@ -16,6 +16,10 @@ const Add = () => {
 
     let [input,setInput] = useState()
     let [datas,setdatas] = useState([null])
+    let [accessToken,setToken] = useState()
+    let [id,setID] = useState()
+
+
     const [createTodo, { error }] = useMutation(CREATE_USER_MUTATION);
 
 //     let Submithandler = ((e)=>{
@@ -36,6 +40,12 @@ const Add = () => {
 
 
 //     })
+ useEffect(()=>{
+  setToken(localStorage.getItem("accessToken"))
+  setID(localStorage.getItem("userid"))
+
+
+},[])
 
 let Submithandler =(async(e)=>{
   e.preventDefault()
@@ -46,10 +56,11 @@ let Submithandler =(async(e)=>{
   });
     if(e.target[0].value !==''){
 console.log(input)
-
+let integer = parseInt(id)
 createTodo({
         variables: {
-          title:input
+          title:input,
+          USERId:integer
         },
       });
 
@@ -97,16 +108,15 @@ createTodo({
         <form  onSubmit={(e)=>Submithandler(e)}>
        
   <InputGroup className="mb-3">
-        <Form.Control
-                onChange={(e)=>{setInput(e.target.value)}} 
+  {accessToken &&  <><Form.Control
+                onChange={(e) => { setInput(e.target.value); } }
 
-          placeholder="Enter "
-          aria-label="Recipient's username"
-          aria-describedby="basic-addon2"
-        />
-        <Button type='submit' variant="success" id="button-addon2">
-        +
-        </Button>
+                placeholder="Enter "
+                aria-label="Recipient's username"
+                aria-describedby="basic-addon2" /><Button type='submit' variant="success" id="button-addon2">
+                  +
+                </Button></> }
+  
       </InputGroup>
 </form>
         </div>
@@ -115,6 +125,7 @@ createTodo({
 
         
     </div>
+    {!accessToken && <div style={{marginLeft:"47%",marginTop:"10px"}}> <Link to="/login">Login to add Todo </Link> </div> }
     {!datas.length ? <p>No Entries</p>:
     <div style={{marginLeft:"50%",marginTop:"10px"}} >
     <Link to="/edit" >View List</Link>

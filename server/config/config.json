@@ -1,8 +1,8 @@
 {
   "development": {
     "username": "root",
-    "password": "root",
-    "database": "graphql2",
+    "password": null,
+    "database": "graphql3",
     "host": "localhost",
     "dialect": "mysql"
   },

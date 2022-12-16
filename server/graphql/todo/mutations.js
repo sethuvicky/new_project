@@ -1,23 +1,26 @@
 
 
-const { GraphQLString, GraphQLNonNull, GraphQLInt } = require('graphql');
+const { GraphQLString, GraphQLNonNull, GraphQLInt ,GraphQLError } = require('graphql');
 
 const TodoType = require('./typeDef');
 const UserType = require('./typeUser');
 const bcrypt = require("bcrypt")
 
 const { connect } = require('../../dbconfig');
+const {Todos} = require("../../models")
+const {USERS} = require("../../models")
+const {sign} = require("jsonwebtoken")
 
-const Todo = require('../../models/Todo');
-const USERS  = require("../../models/Users")
 const createTodo = {
     type: TodoType,
     args: {
         title: { type: GraphQLString },
+        USERId: { type: GraphQLInt },
+
     },
     resolve: async (parent, args, context, info) => {
         await connect();
-        const todo = await Todo.create(args);
+        const todo = await Todos.create(args);
         console.log(args)
         return "todo added successfully";
     }
@@ -52,21 +55,24 @@ const LoginUser = {
         password: { type: GraphQLString },
 
     },
+    
     resolve: async (parent, args, context, info) => {
+        let accessToken;
         await connect();
         const user = await USERS.findOne({where :{email:args.email}})
-        console.log(user.password)
 
     if(!user){
-        return ('user not found') 
-    }else{
+        throw new GraphQLError('User not found');
+        }else{
        bcrypt.compare (args.password,user.password).then((match)=>{
 
            if(!match){
-                return("username or password incorrect")
-           }else{
+            return ('username or password incorrect"');
 
-            return("user found")
+           }else {
+
+              accessToken  = sign({username:user.username,id:user.id},"importantsecretkey")
+                   console.log(accessToken)
 
          
            }
@@ -74,6 +80,7 @@ const LoginUser = {
         })
    
     }
+
 
   
     }
@@ -89,7 +96,7 @@ const updateTodo  = {
     resolve: async (parent, args, context, info) => {
         await connect();
         // logic to filter the blank values
-        const todo = await Todo.update(args, {
+        const todo = await Todos.update(args, {
             where: {
                 id: args.id
             }
@@ -105,7 +112,7 @@ const deleteTodo = {
     },
     resolve: async (parent, args, context, info) => {
         await connect();
-        const todo = await Todo.destroy({
+        const todo = await Todos.destroy({
             where: {
                 id: args.id
             }
