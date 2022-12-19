@@ -21,6 +21,20 @@ const Register = () => {
     }
 
   },[])
+  useEffect(()=>{
+ 
+    axios.get("http://localhost:3004/isAuthenticated",{ withCredentials: true }).then((data)=>{
+      window.location.href = '/'
+
+       
+      }).catch((err)=>{
+   
+      })
+   
+   
+
+  
+  },[])
   let Submithandler =(async(e)=>{
     e.preventDefault()
  

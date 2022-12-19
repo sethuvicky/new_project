@@ -17,19 +17,16 @@ const Login = () => {
     console.log(email,password)
 
 
-    let data = await axios.post("http://localhost:3004/auth" ,{email,password})
+    let data = await axios.post("http://localhost:3004/auth" ,{email,password},{ withCredentials: true })
     if(data.data.error){
       toast.error(data.data.error)
     }else{
       toast.success("successfuly logged in")
 
-      localStorage.setItem("accessToken", data.data.token);
-      console.log(data.data.token)
-      localStorage.setItem("userid",data.data.user.id)
-      localStorage.setItem("username",data.data.user.email)
-
-
       window.location.href = '/'
+
+
+
 
 
     
@@ -39,16 +36,29 @@ const Login = () => {
 
 
   })
-
   useEffect(()=>{
-    let token =  localStorage.getItem("accessToken");
+ 
+    axios.get("http://localhost:3004/isAuthenticated",{ withCredentials: true }).then((data)=>{
+      window.location.href = '/'
 
+       
+      }).catch((err)=>{
+   
+      })
+   
+   
 
-    if(token){
-      navigate("/")
-    }
-
+  
   },[])
+  // useEffect(()=>{
+  //   let token =  localStorage.getItem("accessToken");
+
+
+  //   if(token){
+  //     navigate("/")
+  //   }
+
+  // },[])
   return (
     <><ToastContainer position='bottom' /><div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100%" }}>
 

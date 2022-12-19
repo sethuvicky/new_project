@@ -16,6 +16,8 @@ const Add = () => {
 
     let [input,setInput] = useState()
     let [datas,setdatas] = useState([null])
+    let [isAuth,setisAuth] = useState(false)
+
     let [accessToken,setToken] = useState()
     let [id,setID] = useState()
 
@@ -40,39 +42,37 @@ const Add = () => {
 
 
 //     })
- useEffect(()=>{
-  setToken(localStorage.getItem("accessToken"))
-  setID(localStorage.getItem("userid"))
 
-
-},[])
 
 let Submithandler =(async(e)=>{
   e.preventDefault()
 
-  const client = new ApolloClient({
-    uri: 'http://localhost:3004/graphql',
-    cache: new InMemoryCache(),
-  });
-    if(e.target[0].value !==''){
-console.log(input)
-let integer = parseInt(id)
-createTodo({
-        variables: {
-          title:input,
-          USERId:integer
-        },
-      });
+  const res = await axios.post("http://localhost:3004/todo",{title:input},{ withCredentials: true })
+  console.log(res)
 
-    if (error) {
-      console.log(error)
-     }else{
-      toast.success("data added")
-      console.log(error)
-     }
-    }else{
-      toast.error("Please Enter something")
-    }
+//   const client = new ApolloClient({
+//     uri: 'http://localhost:3004/graphql',
+//     cache: new InMemoryCache(),
+//   });
+//     if(e.target[0].value !==''){
+// console.log(input)
+// let integer = parseInt(id)
+// createTodo({
+//         variables: {
+//           title:input,
+//           USERId:integer
+//         },
+//       });
+
+//     if (error) {
+//       console.log(error)
+//      }else{
+//       toast.success("data added")
+//       console.log(error)
+//      }
+//     }else{
+//       toast.error("Please Enter something")
+//     }
 
 //   if(e.target[0].value !==''){
  
@@ -95,7 +95,9 @@ createTodo({
 })
 
   return (
+
     <>
+
             <ToastContainer position='center' />
         <h1 style={{textAlign:"center" ,marginTop:"100px"}}>Welcome To do list</h1>
         <div className='parent'> 
@@ -108,14 +110,14 @@ createTodo({
         <form  onSubmit={(e)=>Submithandler(e)}>
        
   <InputGroup className="mb-3">
-  {accessToken &&  <><Form.Control
+  <><Form.Control
                 onChange={(e) => { setInput(e.target.value); } }
 
                 placeholder="Enter "
                 aria-label="Recipient's username"
                 aria-describedby="basic-addon2" /><Button type='submit' variant="success" id="button-addon2">
                   +
-                </Button></> }
+                </Button></> 
   
       </InputGroup>
 </form>
@@ -125,7 +127,6 @@ createTodo({
 
         
     </div>
-    {!accessToken && <div style={{marginLeft:"47%",marginTop:"10px"}}> <Link to="/login">Login to add Todo </Link> </div> }
     {!datas.length ? <p>No Entries</p>:
     <div style={{marginLeft:"50%",marginTop:"10px"}} >
     <Link to="/edit" >View List</Link>

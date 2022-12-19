@@ -20,6 +20,7 @@ import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
 import { useEffect,useState } from 'react';
+import ProtectedRoute from './routes/ProductedRoutes';
 
 const errorLink = onError(({ graphqlErrors, networkError }) => {
   if (graphqlErrors) {
@@ -46,23 +47,35 @@ function App() {
   const [token,setToken] = useState()
   const [id,setID] = useState()
   const [data,setdata] = useState()
+  let [isAuth,setisAuth] = useState(false)
 
   useEffect(()=>{
-   setToken(localStorage.getItem("accessToken"))
-   setID(localStorage.getItem("userid"))
+ 
+    axios.get("http://localhost:3004/isAuthenticated",{ withCredentials: true }).then((data)=>{
+      setisAuth(true)
+      localStorage.setItem("userid",data.data.id)
+      console.log(data)
+       
+      }).catch((err)=>{
+         setisAuth(false)
+   
+      })
+   
+   
 
   
   },[])
+  
+
   const logoutHandler = (()=>{
-    localStorage.removeItem("accessToken");
-    localStorage.removeItem("userid")
-    localStorage.removeItem("username")
+    axios.get(`http://localhost:3004/logout`,{ withCredentials: true }).then((data)=>{
+      window.location.href = '/'  })
     
-    setInterval(() => {
-      window.location.href = '/'
+    // setInterval(() => {
+    //   window.location.href = '/'
 
       
-    }, 1000);
+    // }, 1000);
 
   })
   useEffect(()=>{
@@ -84,9 +97,9 @@ function App() {
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="me-auto">
-            <Nav.Link href="/">Add Todo </Nav.Link>
-            <Nav.Link href="/edit">View list</Nav.Link>
-            {!token &&   <><Nav.Link href="/register">Register</Nav.Link><Nav.Link href="/login">login</Nav.Link></>  }
+            {isAuth === true &&         <><Nav.Link href="/">Add Todo </Nav.Link><Nav.Link href="/edit">View list</Nav.Link></> }
+   
+            {isAuth === false &&   <><Nav.Link href="/register">Register</Nav.Link><Nav.Link href="/login">login</Nav.Link></>  }
          
 
 
@@ -94,7 +107,7 @@ function App() {
           </Nav>
           {data &&  <Nav.Link  style={{marginRight:"40px"}}>{data.email}</Nav.Link>  }
 
-          {token  && <Nav.Link  onClick={()=>{logoutHandler()}}>Logout</Nav.Link>}
+          {isAuth === true && <Nav.Link  onClick={()=>{logoutHandler()}}>Logout</Nav.Link>}
         </Navbar.Collapse>
       </Container>
     </Navbar>
@@ -105,12 +118,15 @@ function App() {
 
 
 
-      <Route path="/" element={<Add/>} />
+    <Route exact path='/' element={<ProtectedRoute/>}>
+            <Route exact path='/' element={<Add/>}/>
+          </Route>      
       <Route path="/login" element={<Login/>} />
       <Route path="/register" element={<Register/>} />
 
-      <Route path="/edit" element={<Edit/>} />
-
+      <Route exact path='/edit' element={<ProtectedRoute/>}>
+            <Route exact path='/edit' element={<Edit/>}/>
+          </Route>    
     
     </Routes>
   </BrowserRouter>

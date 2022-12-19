@@ -9,12 +9,17 @@ const bcrypt = require("bcrypt")
 
 const getAllTodos = {
     type: new GraphQLList(TodoType),
+    args: {
+        USERId: { type: GraphQLInt },
+    },
     resolve: async (parent, args, context, info) => {
         await connect();
         const todos = await Todos.findAll({
-        });
-        return todos;
-    }
+            where: { USERId: args.USERId },
+          })
+           return todos
+
+     }
 }
 
 const getTodo = {

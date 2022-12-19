@@ -34,6 +34,7 @@ const Edit = ({datas}) => {
   let [id,setID] = useState()
   useEffect(()=>{
     Todo && Todo.getAllTodos &&setdats(Todo.getAllTodos)
+    console.log(Todo)
   
     
   },[Todo])
@@ -141,17 +142,17 @@ const Edit = ({datas}) => {
 
 
   },[])
-  let viewmore =(async()=>{
-    let datas = await axios.get(`http://localhost:8001/api?limit=${limit}`)
+  // let viewmore =(async()=>{
+  //   let datas = await axios.get(`http://localhost:8001/api?limit=${limit}`)
 
-    datas &&   setdats(datas.data)
-  })
-  useEffect(()=>{
-    viewmore()
+  //   datas &&   setdats(datas.data)
+  // })
+  // useEffect(()=>{
+  //   viewmore()
    
 
 
-  },[limit])
+  // },[limit])
   useEffect(()=>{
     if(remove!==null){
       const result = dats.filter(word => word!== remove);
@@ -226,7 +227,7 @@ let editHandler =(async()=>{
 
 
 })
-
+console.log(dats)
   return (
 
     <>
@@ -253,7 +254,6 @@ ref={(_subtitle) => (subtitle = _subtitle)}>Edit</h2>
       </div>
 
 
-
 {loading ?   <div className="sweet-loading" style={{marginTop:"400px",marginRight:"100px"}}>
 
 <ClipLoader
@@ -264,7 +264,7 @@ ref={(_subtitle) => (subtitle = _subtitle)}>Edit</h2>
   aria-label="Loading Spinner"
   data-testid="loader"
 />
-</div> : dats && dats.map((items)=>{
+</div> :   dats && dats.map((items)=>{
 
 
 
@@ -282,6 +282,8 @@ return  <Card style={{margin:"80px"}}>
                 }   </Card.Body>
   </Card>
 })}
+
+{dats && dats.length < 1 && <h1 style={{textAlign:"center",marginTop:"200px"}}>No entries found</h1>}
         
 
 

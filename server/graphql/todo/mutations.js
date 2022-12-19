@@ -11,21 +11,26 @@ const {Todos} = require("../../models")
 const {USERS} = require("../../models")
 const {sign} = require("jsonwebtoken")
 
-const createTodo = {
-    type: TodoType,
-    args: {
-        title: { type: GraphQLString },
-        USERId: { type: GraphQLInt },
+// const createTodo = {
+//     type: TodoType,
+//     args: {
+//         title: { type: GraphQLString },
+//         USERId: { type: GraphQLInt },
 
-    },
-    resolve: async (parent, args, context, info) => {
-        await connect();
-        const todo = await Todos.create(args);
-        console.log(args)
-        return "todo added successfully";
-    }
+//     },
+//     resolve: async (parent, args, context, info) => {
+
+//         const token = args.cookies.access_token;
+//         console.log(token)
+//         // if (!token) return res.status(401).json("Not authenticated!");
+     
+//         await connect();
+//         const todo = await Todos.create(args);
+//         console.log(args)
+//         return "todo added successfully";
+//     }
     
-}
+// }
 const CreateUser = {
     type: UserType,
     args: {
@@ -122,7 +127,7 @@ const deleteTodo = {
 }
 
 module.exports = {
-    createTodo,
+    // createTodo,
     updateTodo,
     deleteTodo,
     CreateUser,

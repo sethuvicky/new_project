@@ -6,6 +6,8 @@ import { ALL_TODO_REQUEST,
 import { ApolloClient, InMemoryCache, ApolloProvider, gql } from '@apollo/client';
 
 export const getTodo= () => async (dispatch)=>{
+
+  const userid = localStorage.getItem("userid")
     const client = new ApolloClient({
         uri: 'http://localhost:3004/graphql',
         cache: new InMemoryCache(),
@@ -20,11 +22,10 @@ export const getTodo= () => async (dispatch)=>{
         .query({
           query: gql`
           query{
-            getAllTodos{
-              title
+            getAllTodos(USERId:${userid}) {
               id
+              title,
               USERId
-
             }
           }
           `,
