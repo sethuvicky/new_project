@@ -31,7 +31,7 @@ const {sign} = require("jsonwebtoken")
 //     }
     
 // }
-
+// res send cookies example
 const updateUser = {
   type: UserType,
   description: 'The mutation that allows you to update an existing User by Id',
