@@ -31,6 +31,45 @@ const {sign} = require("jsonwebtoken")
 //     }
     
 // }
+
+const updateUser = {
+  type: UserType,
+  description: 'The mutation that allows you to update an existing User by Id',
+  args: {
+    email: { type: GraphQLString },
+    password: { type: GraphQLString },
+
+},
+  resolve:  async (_, args, { res }) => {
+    await connect();
+  const user = await USERS.findOne({where :{email:args.email}})
+   
+    if(!user){
+        throw new Error(`User with  not found!`);
+    }else{
+        bcrypt.compare(args.password,user.password).then((match)=>{
+ 
+            if(!match){
+                console.log("error")
+            }
+    
+         })
+    
+     }
+    // const updatedUser = merge(foundUser, {
+    //   username: user.username,
+    //   email: user.email,
+    // });
+    //  res.json(user)
+    res
+    .cookie("access_token", 'checking', {
+      httpOnly: true,
+      
+    })
+
+    return true;
+},
+};
 const CreateUser = {
     type: UserType,
     args: {
